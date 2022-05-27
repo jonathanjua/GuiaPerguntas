@@ -2,7 +2,8 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const connection =require('./database/database')
-const questionModel = require('./database/question')
+const Question = require('./database/question')
+const raw = require('body-parser/lib/types/raw')
 
 connection
     .authenticate()
@@ -18,8 +19,16 @@ app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.get('/', (req, res) => {  
-    res.render("index")
+app.get('/', (req, res) => {
+
+    Question.findAll({raw: true, order:[
+        ['id', 'DESC']
+    ]}).then(questions => {
+        res.render("index", {
+            questions: questions
+        })
+    })  
+    
 })
 
 app.get('/question', (req, res) => {
@@ -27,8 +36,16 @@ app.get('/question', (req, res) => {
 })
 
 app.post('/savequestion', (req, res) => {
+
     var title = req.body.title
     var description = req.body.description
+
+    Question.create({ 
+        title: title, 
+        description: description
+    }).then(() => {
+        res.redirect("/")
+    })
 })
 
 app.listen(8080, ()=> {

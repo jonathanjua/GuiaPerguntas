@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 const connection = require('./database')
 
 const Question = connection.define('question',{
+
     title:{
         type: Sequelize.STRING,
         allowNull: false
@@ -13,6 +14,6 @@ const Question = connection.define('question',{
 
 });
 
-Question.sync({force:false}).then(()=>{
-    console.log('created database')
-})
+Question.sync({force:false}).then(()=>{})
+
+module.exports = Question
