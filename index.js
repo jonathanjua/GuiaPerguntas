@@ -3,6 +3,7 @@ const app = express()
 const bodyParser = require('body-parser')
 const connection =require('./database/database')
 const Question = require('./database/question')
+const Answer = require('./database/answer')
 const raw = require('body-parser/lib/types/raw')
 
 connection
@@ -49,18 +50,40 @@ app.post('/savequestion', (req, res) => {
 })
 
 app.get('/question/:id', (req, res) => {
+
    var id = req.params.id
+
    Question.findOne({
        where: {id: id}
    }).then(question => {
          if(question != undefined){
-              res.render("question_edit", {
-                question: question
-              })
+
+            Answer.findAll({
+                where: {questionId: id},
+                order: [['id', 'DESC']]
+            }).then(answers => {
+                res.render("question_edit", {
+                    question: question,
+                    answers: answers
+                  })
+            })     
          } else {
               res.redirect("/")
          }
    }) 
+})
+
+app.post("/answer", (req, res) => {
+   
+    var body = req.body.body;
+    var questionId = req.body.questionId;
+
+    Answer.create({
+        body: body,
+        questionId: questionId
+    }).then(() => {
+        res.redirect("/question/" + questionId)
+    })
 })
 
 app.listen(8080, ()=> {

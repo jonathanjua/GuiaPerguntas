@@ -7,20 +7,23 @@
         <p><%=question.description%> </p>
         <hr>
         
-        <!-- <div class="card mt-4">
-            <div class="card-header">
-                <h3 class="m-2"> Realizar perguntas</h3>
+        <form method="POST" action="/answer">
+            <h3>Responda</h3>
+            <label for="">Resposta:</label>
+            <textarea name="body" placeholder="Digite sua resposta.." class="form-control" ></textarea>
+            <input type="hidden" name="questionId" value="<%=question.id%>">
+            <button type="submit" class="btn btn-primary mt-1">Responder</button>
+        </form>
+        <hr>
+        <h3>Respostas</h3>
+        <hr>
+        <% answers.forEach(answer =>{%>
+            <div class="card m-1">
+                <div class="card-body">
+                    <p><%=answer.body%></p>
+                </div>
             </div>
-            <div class="card-body">
-                <form method="POST" action="/savequestion">
-                    <label for="">Titulo</label>
-                    <input type="text" placeholder="title" class="form-control m-1" name="title" id="title" value="<%= question.title %>">
-                    <label for="">Descrição</label>
-                    <textarea class="form-control m-1" placeholder="descreva sua perguntas.." id="description" cols="30" rows="10" name="description" ><%= question.description %></textarea>
-                    <button class="btn btn-success m-1">Pergunta</button>
-                </form>
-            </div>
-        </div> -->
+        <%}) %> 
     </div> 
 
 <%- include('partials/footer.ejs') %>
